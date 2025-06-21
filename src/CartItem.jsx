@@ -4,32 +4,72 @@ import { removeItem, updateQuantity } from './CartSlice';
 import './CartItem.css';
 
 const CartItem = ({ onContinueShopping }) => {
-  const cart = useSelector(state => state.cart.items);
+//   const cart = useSelector(state => state.cart.items);
   const dispatch = useDispatch();
 
   // Calculate total amount for all products in the cart
   const calculateTotalAmount = () => {
- 
+    // Step 1: Initialize total
+    let total = 0;
+
+    // Step 2: Iterate over the cart array
+    cart.forEach(item => {
+        // Step 3: Extract quantity and cost
+        const quantity = item.quantity;
+        const costString = item.cost; // e.g., "$10.00"
+
+        // Step 4: Convert cost string to number
+        const unitPrice = parseFloat(costString.substring(1));
+
+        // Step 5: Multiply quantity by unit price
+        const itemTotal = quantity * unitPrice;
+
+        // Step 6: Add to cumulative total
+        total += itemTotal;
+    });
+
+    // Step 7: Return total sum
+    return total;
   };
 
   const handleContinueShopping = (e) => {
-   
+   onContinueShopping(e)
   };
+   
+  const handleCheckoutShopping = (e) => {
+  alert('Functionality to be added for future reference');
+};
 
 
 
   const handleIncrement = (item) => {
+    dispatch(updateQuantity({ name: item.name, quantity: item.quantity + 1 }));
   };
 
   const handleDecrement = (item) => {
    
+    if (item.quantity > 1) {
+        // If quantity > 1, just decrease by 1
+        dispatch(updateQuantity({ name: item.name, quantity: item.quantity - 1 }));
+      } else {
+        // If quantity would become 0, remove item entirely
+        dispatch(removeItem({ name: item.name }));
+      }
   };
 
   const handleRemove = (item) => {
+    dispatch(removeItem({ name: item.name }));
+
   };
 
   // Calculate total cost based on quantity for an item
   const calculateTotalCost = (item) => {
+    const unitPrice = parseFloat(item.cost.substring(1));
+
+    // Multiply unit price by quantity to get total cost for the item
+    const totalCost = unitPrice * item.quantity;
+
+    return totalCost;
   };
 
   return (
