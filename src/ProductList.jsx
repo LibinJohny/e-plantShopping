@@ -7,7 +7,9 @@ function ProductList({ onHomeClick }) {
     const [showCart, setShowCart] = useState(false);
     const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
     const [addedToCart, setAddedToCart] = useState({});
-    const cartItems = useSelector((state) => state.cart);
+    const cartItems = useSelector((state) => state.cart.items);
+    const dispatch = useDispatch();
+    console.log(showCart,showPlants,addedToCart,cartItems)
     const calculateTotalQuantity = () => {
         return CartItems ? CartItems.reduce((total, item) => total + item.quantity, 0) : 0;
          };
@@ -295,8 +297,10 @@ function ProductList({ onHomeClick }) {
                                 <div>{category.category}</div> {/* Display the category name */}
                             </h1>
                             <div className="product-list"> {/* Container for the list of plant cards */}
-                                {category.plants.map((plant, plantIndex) => ( // Loop through each plant in the current category
-                                    <div className="product-card" key={plantIndex}> {/* Unique key for each plant card */}
+                                {category.plants.map((plant, plantIndex) => {
+                                        console.log(addedToCart.name,"eddd")
+                                        const isAlreadyInCart = (cartItems || []).some(item => item.name === plant.name);
+                                        return (<div className="product-card" key={plantIndex}> {/* Unique key for each plant card */}
                                         <img
                                             className="product-image"
                                             src={plant.image} // Display the plant image
@@ -309,11 +313,13 @@ function ProductList({ onHomeClick }) {
                                         <button
                                             className="product-button"
                                             onClick={() => handleAddToCart(plant)} // Handle adding plant to cart
+                                            disabled={isAlreadyInCart}
                                         >
-                                            Add to Cart
-                                        </button>
+                                            {isAlreadyInCart ? 'Added' : 'Add to Cart'}
+                                            </button>
                                     </div>
-                                ))}
+                                )
+})}
                             </div>
                         </div>
                     ))}
