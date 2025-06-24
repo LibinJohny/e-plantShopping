@@ -12,7 +12,7 @@ export const CartSlice = createSlice({
   const existingItem = state.items.find(item => item.name === name);
   if (existingItem) {
     // If item already exists in the cart, increase its quantity
-    existingItem.quantity++;
+    existingItem.quantity += 1;
   } else {
     // If item does not exist, add it to the cart with quantity 1
     state.items.push({ name, image, cost, quantity: 1 });

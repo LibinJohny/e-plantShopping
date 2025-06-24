@@ -16,7 +16,8 @@ function ProductList({ onHomeClick }) {
 
     const handleAddToCart = (product) => {
         dispatch(addItem(product)); // Dispatch the action to add the product to the cart (Redux action)
-      
+        console.log(cartItems,"citems");
+
         setAddedToCart((prevState) => ({ // Update the local state to reflect that the product has been added
           ...prevState, // Spread the previous state to retain existing entries
           [product.name]: true, // Set the current product's name as a key with value 'true' to mark it as added
@@ -298,7 +299,7 @@ function ProductList({ onHomeClick }) {
                             </h1>
                             <div className="product-list"> {/* Container for the list of plant cards */}
                                 {category.plants.map((plant, plantIndex) => {
-                                        console.log(addedToCart.name,"eddd")
+
                                         const isAlreadyInCart = (cartItems || []).some(item => item.name === plant.name);
                                         return (<div className="product-card" key={plantIndex}> {/* Unique key for each plant card */}
                                         <img
@@ -314,6 +315,11 @@ function ProductList({ onHomeClick }) {
                                             className="product-button"
                                             onClick={() => handleAddToCart(plant)} // Handle adding plant to cart
                                             disabled={isAlreadyInCart}
+                                            style={{
+                                                backgroundColor: isAlreadyInCart ? 'gray' : 'green',
+                                                color: 'white',
+                                                cursor: isAlreadyInCart ? 'not-allowed' : 'pointer'
+                                              }}
                                         >
                                             {isAlreadyInCart ? 'Added' : 'Add to Cart'}
                                             </button>
